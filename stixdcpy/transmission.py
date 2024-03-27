@@ -35,8 +35,8 @@ COMPONENTS = OrderedDict([
     ('calibration_foil', [('al', 4 * 1000 * u.angstrom),
                           ('kapton', 4 * 2 * MIL_SI)]),
     ('dead_layer', [('te_o2', 392 * u.nm)]),
-    ('single_grid', [('tungsten', 0.4 * u.mm)]),
-    ('double_grid', [('tungsten', 0.8 * u.mm)]),
+    ('single_grid', [('tungsten', 0.40 * u.mm)]),
+    ('double_grid', [('tungsten', 0.80 * u.mm)]),
     ('caliste', [('cdte', 1 * u.mm)]),
 ])  #old materials, not valid anymore
 
@@ -50,7 +50,7 @@ MATERIALS = OrderedDict([
     }, 5.85 * u.g / u.cm**3)),
     ('tungsten', ({
         'W': 1.0
-    }, 19.28 * u.g / u.cm**3)),
+    }, 19.3 * u.g / u.cm**3)),
     (
         'alum7075-max',
         (
