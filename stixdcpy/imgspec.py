@@ -141,7 +141,7 @@ class ImgSpecArchive(sio.IO):
             display(HTML(f'<h3>Image ID # {data["_id"]}</h3>'))
             uid = data['unique_id']
             start_utc = data['utc_range'][0]
-            date_str=sdt.utc2filepath(start_utc)
+            work_dir=data['work_dir']
             try:
                 peak= data['peak_utc']
                 display(
@@ -160,7 +160,7 @@ class ImgSpecArchive(sio.IO):
             for key, val in report.items():
                 if image_type not in val['title']:
                     continue
-                url = f'{net.HOST}/image-archive/{date_str}/{uid}/{val["filename"]}'
+                url = f'{net.HOST}/image-archive/{work_dir}/{val["filename"]}'
                 display(HTML(f'<b>{val.get("title","")}</b>'))
                 display(Image(url=url, width=400, height=300))
             ishown += 1
