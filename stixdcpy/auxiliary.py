@@ -149,6 +149,14 @@ class Pointing(Ephemeris):
         return cls(utc, data)
 
     def peek(self, ax=None):
+        """
+        Plot the solar ephemeris data 
+
+        Args:
+            ax (_type_, optional): _description_. Defaults to None.
+        Returns:
+        ax:  matplotlib axes
+            """
         if not self.data:
             logger.error(f'Data not loaded. ')
             return None

@@ -485,8 +485,59 @@ class Transmission:
         material.mass_attenuation_coefficient.func = material_func
         return material
 
+def get_transmission(composition: dict, thickness: float, density: float, energies: np.array):
+    """
+    Calculates the transmission of a material for given energies based on its composition, thickness, and density.
+
+    Parameters:
+    - composition (dict): A dictionary representing the composition of the material, where keys are chemical symbols
+                          and values are the fractional masses of the corresponding elements.
+    - thickness (float): The thickness of the material in millimeters (mm).
+    - density (float): The density of the material in grams per cubic centimeter (g/cm^3).
+    - energies (np.array): An array containing the energies in kiloelectronvolts (keV) for which transmission is to be calculated.
+
+    Returns:
+    energies, transmission
+
+    Note:
+    The function internally uses the 'Transmission' class to create a material and calculate its transmission.
+    Example usage:
+    composition = {'Te': 0.531644, 'Cd': 0.4683554}
+    thickness = 2.5  # mm
+    density = 8.9  # g/cm^3
+    energies = np.array([30, 50, 100])  # keV
+    get_transmission(composition, thickness, density, energies)
+    """
+    density = density * u.g / u.cm ** 3
+    thickness = thickness * u.mm
+    energies_keV = energies * u.keV
+    material = Transmission.create_material(name='user_material',
+                                            fractional_masses=composition,
+                                            thickness=thickness,
+                                            density=density)
+    trans = material.transmission(energies_keV)
+    return energies,  trans
 
 def get_detector_absorption(energies=None):
+    """
+    Calculates the absorption of a detector material for given energies.
+
+    Parameters:
+    - energies (array-like, optional): An array containing the energies in kiloelectronvolts (keV) for which absorption
+                                       is to be calculated. If not provided, energies will be generated from 2 to 150 keV
+                                       with 1001 points.
+
+    Returns:
+    Tuple: A tuple containing two arrays:
+        - energies (array): An array containing the energies in keV.
+        - absorption (array): An array containing the corresponding absorption values.
+
+    Note:
+    The function internally uses the 'Transmission' class to create a material and calculate its absorption.
+    Example usage:
+    get_detector_absorption()
+    get_detector_absorption(energies=np.linspace(2, 200, 500))
+    """
     mass_fraction = {'Te': 0.531644, 'Cd': 0.4683554}
     density = 6.2 * u.g / u.cm**3
     thickness = 1 * u.mm
@@ -494,6 +545,7 @@ def get_detector_absorption(energies=None):
                                             fractional_masses=mass_fraction,
                                             thickness=thickness,
                                             density=density)
+
     if energies is None:
         energies = np.linspace(2, 150, 1001)
     energies_keV = energies * u.keV
@@ -501,6 +553,22 @@ def get_detector_absorption(energies=None):
     return energies, absorption
 
 def get_component_absorption(name, energies):
+    """
+    Calculates the absorption of a specific component material for given energies.
+
+    Parameters:
+    - name (str): The name of the component material.
+    - energies (array-like): An array containing the energies in kiloelectronvolts (keV) for which absorption
+                             is to be calculated.
+
+    Returns:
+    array: An array containing the absorption values corresponding to the given energies.
+
+    Note:
+    The function internally uses the 'Transmission' class to calculate the transmission of the component material.
+    Example usage:
+    get_component_absorption(name='my_material', energies=np.linspace(2, 150, 1001))
+    """
     t=Transmission()
     trans=t.get_transmission_of_component(name, energies)
     return trans
