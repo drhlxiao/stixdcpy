@@ -511,10 +511,7 @@ def get_transmission(composition: dict, thickness: float, density: float, energi
     density = density * u.g / u.cm ** 3
     thickness = thickness * u.mm
     energies_keV = energies * u.keV
-    material = Transmission.create_material(name='user_material',
-                                            fractional_masses=composition,
-                                            thickness=thickness,
-                                            density=density)
+    material = Material(composition,thickness,density=density)
     trans = material.transmission(energies_keV)
     return energies,  trans
 
@@ -541,10 +538,7 @@ def get_detector_absorption(energies=None):
     mass_fraction = {'Te': 0.531644, 'Cd': 0.4683554}
     density = 6.2 * u.g / u.cm**3
     thickness = 1 * u.mm
-    material = Transmission.create_material(name='cdte',
-                                            fractional_masses=mass_fraction,
-                                            thickness=thickness,
-                                            density=density)
+    material = Material(mass_fraction,thickness,density=density)
 
     if energies is None:
         energies = np.linspace(2, 150, 1001)
